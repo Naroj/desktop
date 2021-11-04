@@ -1,0 +1,8 @@
+---
+# handlers file for mypi
+
+- name: reload systemd
+  become_user: "{{ my_user }}"
+  systemd:
+    scope: user
+    daemon_reload: yes
