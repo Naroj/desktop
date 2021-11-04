@@ -1,0 +1,8 @@
+---
+- name: Desktop
+  become: true
+  hosts: localhost
+  connection: local
+
+  roles:
+    - role: icecube
