@@ -1,0 +1,32 @@
+---
+# Run tasks
+#
+- name: pre-flight checks
+  import_tasks: pre_flight.yml
+  tags: "pf"
+
+- name: packages
+  become: yes
+  import_tasks: pkgs.yml
+  tags: "pkg"
+
+- name: services
+  become: yes
+  import_tasks: system_services.yml
+  tags: "services"
+
+- name: user home
+  become: yes
+  become_user: "{{ my_user }}"
+  import_tasks: user_home.yml
+  tags: "user"
+
+- name: user containers
+  become: yes
+  become_user: "{{ my_user }}"
+  import_tasks: containers.yml
+  tags: "docker"
+
+
+
+

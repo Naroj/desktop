@@ -1,6 +1,6 @@
 ---
 - name: Desktop
-  become: true
+  become: false
   hosts: localhost
   connection: local
 

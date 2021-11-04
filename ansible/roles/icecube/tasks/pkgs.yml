@@ -1,0 +1,7 @@
+- name: install desired packages
+  pacman:
+    pkg: "{{ pkgs_present }}"
+    state: present
+
+
+    

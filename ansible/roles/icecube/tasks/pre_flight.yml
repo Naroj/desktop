@@ -1,0 +1,38 @@
+- name: fetch load
+  shell: "w | head -n1 | awk '{print $10}' | cut -d, -f1"
+  register: load
+  tags: "pf"
+
+- name: fetch system temp
+  shell: "vcgencmd measure_temp | cut -d= -f2 | cut -d. -f1"
+  register: temp
+  tags: "pf"
+
+- name: fetch available memory
+  shell: "free -m | grep ^Mem | awk '{print $4}'"
+  register: free_mem
+  tags: "pf"
+
+  #- name: Load check
+  #assert:
+  #  that:
+  #    - load.stdout | int <= 3
+  #  fail_msg: "system load is too high: {{ load.stdout }}"
+  #tags: "pf"
+
+- name: Temp check
+  assert:
+    that:
+      - temp.stdout | int <= 78
+    fail_msg: "system temperature is too high: {{ temp.stdout }}"
+  tags: "pf"
+
+- name: Memory check
+  assert:
+    that:
+      - free_mem.stdout | int >= 1000
+    fail_msg: "Not enough available memory: {{ free_mem.stdout }}"
+  tags: "pf"
+
+
+# TODO: CPU, mem + disk check

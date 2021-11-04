@@ -1,0 +1,4 @@
+- name: k9s
+  docker_image:
+    name: derailed/k9s
+    source: pull

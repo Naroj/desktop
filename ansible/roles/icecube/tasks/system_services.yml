@@ -1,0 +1,20 @@
+- name: Print service
+  systemd:
+    name: cups.service
+    enabled: no
+    state: stopped
+  ignore_errors: True
+
+- name: Docker service
+  systemd:
+    name: docker.service
+    enabled: yes
+    state: started
+
+- name: adding existing user to groups
+  user:
+    name: '{{ my_user }}'
+    groups: 
+      - wheel
+      - docker
+    append: yes

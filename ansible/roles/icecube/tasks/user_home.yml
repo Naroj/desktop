@@ -1,0 +1,30 @@
+- name: get user home directory
+  shell: >
+    getent passwd {{ my_user }}  | awk -F: '{ print $6 }'
+  changed_when: false
+  register: user_home
+
+- set_fact:
+    my_home: "{{ user_home.stdout }}/"  
+
+- name: pip packages
+  pip:
+    name: "{{ pip_modules }}"
+    state: present
+    executable: "{{ user_home.stdout }}/{{ venv }}/bin/pip"
+
+- name: debug
+  debug:
+    var: my_home
+
+- name: User directories
+  file:
+    path: "{{ item }}"
+    owner: "{{ my_user }}"
+    state: directory
+    mode: "0700"
+  with_items: "{{ [my_home] | product(user_home_dirs) | map('join') | list }}"
+
+- debug:
+    msg: "{{ [my_home] | product(user_home_dirs) | map('join') | list }}"
+  
