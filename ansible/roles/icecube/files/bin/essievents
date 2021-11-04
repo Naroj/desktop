@@ -1,0 +1,235 @@
+#!/home/pi/.venv/bin/python
+
+DESCR = """
+Exchange cal, mail fetcher for conky/anything else
+"""
+
+import sys
+import pprint
+import json
+import logging
+import datetime
+import argparse
+import os
+from typing import List
+from exchangelib import Credentials, Account, EWSDateTime, EWSTimeZone, Folder
+
+ITEM_LIMIT = 10
+SUBJ_LIMIT = 20
+TMP_PREFIX = "essi_"
+TMP_DIR = f"{os.getenv('HOME')}/.tmp"
+CONKY_CAL_PREFIX = "${font GeosansLight:size=15:italic}${offset 60}${color1}"
+CONKY_PREFIX = "${font GeosansLight:size=15:italic}${offset 60}${color8}"
+
+
+def parse_argv(argvs: list) -> dict:
+    type_choice = ["cal", "mail"]
+    action_choice = ["fetch", "show"]
+    time_choice = ["today", "tomorrow", "yesterday", "past_week"]
+    parser = argparse.ArgumentParser(description=DESCR)
+    parser.add_argument(
+        "--type",
+        choices=type_choice,
+        required=True,
+        default=None,
+        help="calendar {day} events",
+    )
+    parser.add_argument(
+        "--time",
+        choices=time_choice,
+        required=False,
+        default=None,
+        help="define a point in time",
+    )
+    parser.add_argument(
+        "--action",
+        choices=action_choice,
+        required=False,
+        default=False,
+        help="show (earlier fetched) items",
+    )
+    cli_args = parser.parse_args(argvs)
+    return cli_args.__dict__
+
+
+def init_exchange() -> Account:
+    """ """
+    my_account = "***"
+    my_email = "j****"
+    passw = "*****$"
+    try:
+        creds = Credentials(my_account, passw)
+        account = Account(my_email, credentials=creds, autodiscover=True)
+    except Exception as err:
+        return False
+    return account
+
+
+def str_limit(string: str = "", limit=20) -> str:
+    """ cut a string to 'limit' if its length exceeds this number """
+    if len(str(string)) > limit:
+        return f"{str(string[:-limit])}.."
+    else:
+        return str(string)
+
+
+def conv_from_utc(dt: datetime.datetime) -> str:
+    local_tz = dt.replace(tzinfo=datetime.timezone.utc).astimezone(tz=None)
+    return f"{local_tz.hour}:{local_tz.minute}"
+
+
+def get_yymmdd(time: str = "today") -> tuple:
+    now = datetime.datetime.now()
+    if time == "today":
+        y, m, d = now.year, now.month, now.day
+    elif time == "tomorrow":
+        tom = now + datetime.timedelta(days=1)
+        y, m, d = tom.year, tom.month, tom.day
+    elif time == "yesterday":
+        yest = now - datetime.timedelta(days=1)
+        y, m, d = yest.year, yest.month, yest.day
+    elif time == "past_week":
+        past_week = now - datetime.timedelta(days=7)
+        y, m, d = past_week.year, past_week.month, past_week.day
+    elif time == "ten_days":
+        td = now + datetime.timedelta(days=10)
+        y, m, d = td.year, td.month, td.day
+    else:
+        raise UserWarning(f"calendar_events: day, {day} is not accepted")
+    return y, m, d
+
+
+def calendar_events(account: Account, time: str = "today") -> list:
+    """ expect an established account session """
+    tz = EWSTimeZone("UTC")
+    start = EWSDateTime(*get_yymmdd(time), 5, tzinfo=tz)
+    end = EWSDateTime(*get_yymmdd(time), 23, tzinfo=tz)
+    events = account.calendar.filter(start__range=(start, end))
+    output = []
+    for event in events:
+        # opt_att = event.optional_attendees
+        # req_att = event.required_attendees
+        item = {
+            "organizer": event.organizer.name,
+            "subject": event.subject,
+            "start": conv_from_utc(event.start),
+            "end": conv_from_utc(event.end),
+        }
+        output.append(item)
+    return output
+
+
+def mail_events(account: Account, time: str = "today") -> list:
+    """ expect an established account session """
+    tz = EWSTimeZone("Europe/Amsterdam")
+    time_scope = EWSDateTime(*get_yymmdd(time), 23, tzinfo=tz)
+    inbox = account.inbox.filter(
+        datetime_received__gt=time_scope, is_read=False
+    )
+    events = inbox.order_by("-datetime_received")
+    output = []
+    for item in events:
+        item = {
+            "from": item.author.name,
+            "subject": item.subject,
+            "start": item.datetime_received.strftime("%d %B, %H:%M"),
+        }
+        output.append(item)
+    return output
+
+
+def get_day_name(day: str):
+    """ get day name based on day as keywords """
+    today = datetime.datetime.now()
+    delta = datetime.timedelta(days=1)
+    delta_week = datetime.timedelta(days=7)
+    past_week = today - delta_week
+    opts = {
+        "today": today.strftime("%A"),
+        "yesterday": (today - delta).strftime("%A"),
+        "tomorrow": (today + delta).strftime("%A"),
+        "past_week": f"{past_week.strftime('%W')}-{today.strftime('%W')}",
+    }
+    try:
+        return opts[day].lower()
+    except KeyError:
+        raise UserWarning(f"unacceptable day input: {day}")
+
+
+def write_events(events: List[dict], kind: str, time: str) -> int:
+    """ event data to temp file """
+    time_name = get_day_name(time)
+    ev_file = f"{TMP_DIR}/{TMP_PREFIX}{kind}_{time_name}"
+    content = json.dumps(events)
+    with open(f"{ev_file}", "wb") as fp:
+        fp.write(content.encode())
+    return len(events)
+
+
+def read_events(kind: str, time: str) -> dict:
+    """ read a single event file """
+
+    def event_to_text(kind, data, most_recent=False):
+        if kind == "mail":
+            return (
+                f"{CONKY_PREFIX}{data['subject']}\n"
+                f"{CONKY_PREFIX}{data['start']} ({data['from']})\n\n"
+            )
+        if kind == "cal":
+            return ( 
+                f"{CONKY_CAL_PREFIX}{data['subject']}\n"
+                f"{CONKY_CAL_PREFIX}{data['start']} - {data['end']}  ({data['organizer']})\n\n"
+            )
+
+    day_name = get_day_name(time)
+    ev_file = f"{TMP_DIR}/{TMP_PREFIX}{kind}_{day_name}"
+    try:
+        with open(ev_file, "r") as fp:
+            events = json.loads(fp.read())
+    except (IOError, KeyError):
+        return ""
+    output = ""
+    for event in sorted(events, reverse=True, key=lambda k: k['start']):
+        output = output + event_to_text(kind, event)
+    if not output:
+        output = f"{CONKY_CAL_PREFIX} * * clean slate * * \n"
+    return output
+
+
+def main():
+    params = parse_argv(sys.argv[1:])
+    my_account = init_exchange()
+    time = params.get("time")
+    kind = params.get("type")
+    if not time and kind == "mail":
+        logging.debug("defaulting to last_week timespan for fetching %s" % kind)
+        time = "past_week"
+    elif not time and kind == "cal":
+        logging.debug("defaulting to today timespan for fetching %s" % kind)
+        time = "today"
+    if params["action"] == "fetch":
+        if kind == "cal":
+            events = calendar_events(my_account, time=time)
+        elif kind == "mail":
+            events = mail_events(my_account, time)
+        write = write_events(events, kind, time)
+    elif params["action"] == "show":
+        event = read_events(kind, time)
+        sys.stdout.write(event)
+        sys.stdout.flush()
+
+
+def pre_flight_checks():
+    if not os.path.isdir(TMP_DIR):
+        raise UserWarning(f'tmp folder "{TMP_DIR}" does not exist')
+    elif not sys.argv[1:]:
+        raise UserWarning("no arguments means no cigars to smoke")
+
+
+if __name__ == "__main__":
+    try:
+        pre_flight_checks()
+        main()
+    except UserWarning as fatal_err:
+        logging.error(fatal_err)
+        sys.exit(1)
