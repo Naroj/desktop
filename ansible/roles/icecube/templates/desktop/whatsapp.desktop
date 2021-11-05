@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=WhatsApp Web
+Terminal=false
+GenericName=WhatsApp Web
+Comment=chatty
+Exec={{ chrome_binary }} --app="{{ url_whatsapp }}" --user-data-dir={{ home_dir }}/{{ chrome_apps_dir}}/whatsapp
+StartupNotify=true
+Categories=GTK;Network;

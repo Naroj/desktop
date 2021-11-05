@@ -1,0 +1,5 @@
+[Added Associations]
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=abiword.desktop;
+
+[Default Applications]
+application/vnd.openxmlformats-officedocument.wordprocessingml.document=abiword.desktop

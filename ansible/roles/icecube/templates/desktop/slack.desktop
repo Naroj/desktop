@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Slack Amsterdam
+Terminal=false
+GenericName=Slack Amsterdam
+Comment=chatty
+Exec={{ chrome_binary }} --app="{{ url_slack }}" --user-data-dir={{ home_dir }}/{{ chrome_apps_dir}}/slack
+StartupNotify=true
+Categories=GTK;Network;

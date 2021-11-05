@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=AmsterdamTeams
+Terminal=false
+GenericName=AmsterdamTeams
+Comment=chatty
+Exec={{ chrome_binary }} --app="{{ url_teams }}" --user-data-dir={{ home_dir }}/{{ chrome_apps_dir}}/amsterdam-teams
+StartupNotify=true
+Categories=GTK;Network;
