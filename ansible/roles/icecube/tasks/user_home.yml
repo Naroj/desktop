@@ -2,6 +2,17 @@
   include_vars:
     file: home.yml
 
+- name: Xfce4 whisker menu
+  copy:
+    src: "{{ role_path }}/files/xfce4/whiskermenu-8.rc"
+    dest: "{{ home_dir }}/.config/xfce4/panel/whiskermenu-8.rc"
+
+- name: Xfce4 keyboard shortcuts
+  copy:
+    src: "{{ role_path }}/files/xfce4/xfce4-keyboard-shortcuts.xml"
+    dest: "{{ home_dir }}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml"
+
+
 - name: pip packages
   pip:
     name: "{{ pip_modules }}"

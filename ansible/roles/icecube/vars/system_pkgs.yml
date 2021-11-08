@@ -1,6 +1,8 @@
 present:
   - "xdotool"
   - "dnsutils"
+  - "sysstat"
+  - "torbrowser-launcher"
   - "make"
   - "gcc"
   - "postgresql-libs"
@@ -23,3 +25,4 @@ present:
   - "tlp"
   - "tlpui"
   - "elinks"
+  - "gimp"
