@@ -1,4 +1,4 @@
-present:
+pkgs:
   - "xdotool"
   - "dnsutils"
   - "sysstat"
@@ -26,3 +26,10 @@ present:
   - "tlpui"
   - "elinks"
   - "gimp"
+
+started:
+  - "docker.service"
+  - "tlp.service"
+    
+stopped:
+  - "cups.service"

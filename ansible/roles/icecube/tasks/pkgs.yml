@@ -1,10 +1,10 @@
 - name: Load variables for home
   include_vars:
-    file: system_pkgs.yml
+    file: system.yml
 
 - name: install desired packages
   pacman:
-    pkg: "{{ present }}"
+    pkg: "{{ pkgs }}"
     state: present
 
 

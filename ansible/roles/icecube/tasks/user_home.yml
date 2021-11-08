@@ -69,26 +69,9 @@
     mode: "0700"
   with_items: "{{ [home_dir] | product(user_home_dirs) | map('join') | list }}"
 
-- name: Teams
+- name: Desktop file templates
   template:
-    src: "templates/desktop/teams.desktop"
-    dest: "{{ home_dir }}/{{ user_app_dir }}/teams.desktop"
-    owner: "{{ my_user }}"
-    group: "{{ my_user }}"
-    mode: "0700"
-
-- name: Whatsapp Web
-  template:
-    src: "templates/desktop/whatsapp.desktop"
-    dest: "{{ home_dir }}/{{ user_app_dir }}/whatsapp.desktop"
-    owner: "{{ my_user }}"
-    group: "{{ my_user }}"
-    mode: "0700"
-    
-- name: Slack
-  template:
-    src: "templates/desktop/slack.desktop"
-    dest: "{{ home_dir }}/{{ user_app_dir }}/slack.desktop"
-    owner: "{{ my_user }}"
-    group: "{{ my_user }}"
-    mode: "0700"
+    src: "{{ item }}"
+    dest: "{{ home_dir }}/{{ user_app_dir }}/"
+  with_fileglob: 
+    - "templates/desktop/*.desktop"

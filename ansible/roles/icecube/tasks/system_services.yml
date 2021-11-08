@@ -1,26 +1,20 @@
-- name: Print service
+- name: stop unwanted goblins
   systemd:
-    name: cups.service
+    name: "{{ item }}"
     enabled: no
     state: stopped
-  ignore_errors: True
+  with_items: "{{ stopped }}"
 
-- name: Docker service
+- name: start the music
   systemd:
-    name: docker.service
-    enabled: yes
+    name: "{{ item }}"
+    enabled: no
     state: started
-
-- name: TLP power management
-  systemd:
-    name: tlp.service
-    enabled: yes
-    state: started
+  with_items: "{{ started }}"
 
 - name: adding existing user to groups
   user:
     name: '{{ my_user }}'
-    groups: 
-      - wheel
-      - docker
+    groups: "{{ item }}"
     append: yes
+  with_items: "{{ user_groups }}"
