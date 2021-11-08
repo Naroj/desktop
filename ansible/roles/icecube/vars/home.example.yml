@@ -1,0 +1,29 @@
+home_dir: ""
+user_bin: "bin"
+docker_data_dir: ".local/my-docker-data-folder"
+user_app_dir: ".local/share/applications"
+venv: ".venv"
+
+chrome_apps_dir: ".local/chrome-apps"
+chrome_binary: "/usr/bin/chromium"
+
+pip_modules:
+  - "docker"
+  - "docker-compose"
+  - "black"
+  - "isort"
+
+# folders are created in the $USER's home
+user_home_dirs:
+  - "bin"
+  - "git"
+  - ".config/systemd/user"
+  - ".tmp"
+  - ".config/conky"
+  - "{{ docker_data_dir }}"
+  - "{{ user_app_dir }}"
+
+
+url_slack: "https://app.slack.example.com"
+url_teams: "https://teams.microsoft.com/example"
+url_whatsapp: "https://web.whatsapp.com"

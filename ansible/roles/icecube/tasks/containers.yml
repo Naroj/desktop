@@ -1,4 +1,24 @@
 - name: k9s
   docker_image:
     name: derailed/k9s
+    tag: latest
     source: pull
+
+- name: terraform
+  docker_image:
+    name: zenika/terraform-azure-cli
+    tag: latest
+    source: pull
+
+
+#- name: Terraform container
+#  docker_container:
+#    name: tf
+#    image: hashicorp/terraform:1.0.10
+#    state: present
+#    recreate: yes
+#    mounts:
+#      - type: bind
+#        read_only: no
+#        source: "{{ home_dir }}/{{ docker_data_dir }}/terraform"
+#        target: /tf

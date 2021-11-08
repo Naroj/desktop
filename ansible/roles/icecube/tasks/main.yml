@@ -1,9 +1,9 @@
 ---
 # Run tasks
 #
-- name: pre-flight checks
-  import_tasks: pre_flight.yml
-  tags: "pf"
+# - name: pre-flight checks
+#   import_tasks: pre_flight.yml
+#   tags: "pf"
 
 - name: packages
   become: yes

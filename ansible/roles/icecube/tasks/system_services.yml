@@ -11,6 +11,12 @@
     enabled: yes
     state: started
 
+- name: TLP power management
+  systemd:
+    name: tlp.service
+    enabled: yes
+    state: started
+
 - name: adding existing user to groups
   user:
     name: '{{ my_user }}'

@@ -8,6 +8,48 @@
     state: present
     executable: "{{ home_dir }}/{{ venv }}/bin/pip"
 
+- name: venv bin in path
+  lineinfile:
+    path: "{{ home_dir }}/.bashrc"
+    state: present
+    regexp: "^PATH="
+    line: "PATH=$PATH:{{ home_dir }}/{{ venv}}/bin"
+
+- name: Python alias
+  lineinfile:
+    path: "{{ home_dir }}/.bashrc"
+    state: present
+    regexp: "^alias python="
+    line: "alias python=\"{{ home_dir }}/{{ venv}}/bin/python\""
+
+- name: PiP alias
+  lineinfile:
+    path: "{{ home_dir }}/.bashrc"
+    state: present
+    regexp: "^alias pip="
+    line: "alias pip=\"{{ home_dir }}/{{ venv}}/bin/pip\""
+
+- name: K9S alias
+  lineinfile:
+    path: "{{ home_dir }}/.bashrc"
+    state: present
+    regexp: "^alias k9s="
+    line: "alias k9s=\"docker run derailed/k9s\""
+
+- name: docker
+  lineinfile:
+    path: "{{ home_dir }}/.bashrc"
+    state: present
+    regexp: "^alias d="
+    line: "alias d=\"docker\""
+
+- name: terraform
+  lineinfile:
+    path: "{{ home_dir }}/.bashrc"
+    state: present
+    regexp: "^alias tf="
+    line: "alias tf=\"docker run --mount type=bind,source={{ home_dir }}/{{ container_data_dir }}/terraform,destination=/workspace -ti {{ tf_image }}\""
+
 - name: User directories
   file:
     path: "{{ item }}"
