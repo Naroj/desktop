@@ -1,0 +1,8 @@
+---
+# vars file for icecube
+#
+my_user: "example_user"
+
+user_groups:
+  - "nobody"
+  - "floppy"
