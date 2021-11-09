@@ -61,6 +61,15 @@
     regexp: "^alias tf="
     line: "alias tf=\"docker run --mount type=bind,source={{ home_dir }}/{{ container_data_dir }}/terraform,destination=/workspace -ti {{ tf_image }}\""
 
+- name: Run this ansible role
+  lineinfile:
+    path: "{{ home_dir }}/.bashrc"
+    state: present
+    regexp: "^alias ap="
+    line: "alias ap=\"cd {{ home_dir }}/git/desktop/ansible; sudo ansible-playbook -v main.yml; cd - \""
+
+
+
 - name: User directories
   file:
     path: "{{ item }}"
@@ -75,3 +84,8 @@
     dest: "{{ home_dir }}/{{ user_app_dir }}/"
   with_fileglob: 
     - "templates/desktop/*.desktop"
+
+- name: Install Oh My ZSH
+  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+  args:
+    creates: "{{ home_dir }}/.oh-my-zsh"

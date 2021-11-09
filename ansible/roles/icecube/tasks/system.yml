@@ -1,0 +1,15 @@
+- name: Load variables for system
+  include_vars:
+    file: system.yml
+
+- name: install desired packages
+  pacman:
+    pkg: "{{ pkgs }}"
+    state: present
+
+- name: Xorg files
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/X11/xorg.conf.d/"
+  with_fileglob: 
+    - "files/etc/X11/xorg.conf.d/*.conf"

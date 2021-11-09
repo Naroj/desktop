@@ -15,6 +15,7 @@
 - name: adding existing user to groups
   user:
     name: '{{ my_user }}'
-    groups: "{{ item }}"
+    groups: 
+      - "{{ item }}"
     append: yes
   with_items: "{{ user_groups }}"

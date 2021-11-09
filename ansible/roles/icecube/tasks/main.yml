@@ -5,10 +5,10 @@
 #   import_tasks: pre_flight.yml
 #   tags: "pf"
 
-- name: packages
+- name: system
   become: yes
-  import_tasks: pkgs.yml
-  tags: "pkg"
+  import_tasks: system.yml
+  tags: "system"
 
 - name: services
   become: yes

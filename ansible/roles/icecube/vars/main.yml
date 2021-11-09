@@ -3,34 +3,9 @@
 #
 
 my_user: "ahimsa"
-user_bin: "bin"
-docker_data_dir: "dock-data"
-venv: ".venv"
 
-pip_modules:
+user_groups:
+  - "wheel"
   - "docker"
 
-user_home_dirs:
-  - "bin"
-  - ".config/systemd/user"
-  - ".tmp"
-  - ".config/conky"
-  - "{{ docker_data_dir }}"
 
-pkgs_present:
-  - "code"
-  - "firefox"
-  - "chromium"
-  - "jq"
-  - "vim"
-  - "conky"
-  - "w3m"
-  - "tmux"
-  - "ack"
-  - "abiword"
-  - "gnumeric"
-  - "newsboat"
-  - "mutt"
-  - "docker"
-  - "lynx"
-  - "cups"
