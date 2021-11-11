@@ -27,3 +27,9 @@ user_home_dirs:
 url_slack: "https://app.slack.example.com"
 url_teams: "https://teams.microsoft.com/example"
 url_whatsapp: "https://web.whatsapp.com"
+
+rss_links:
+  - "https://www.intelligentliving.co/feed"
+  - "https://jpmens.net/atom.xml"
+  - "https://rachelbythebay.com/w/atom.xml"
+  - "https://www.brendangregg.com/blog/rss.xml"

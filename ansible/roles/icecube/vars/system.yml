@@ -31,6 +31,9 @@ pkgs:
   - "elinks"
   - "gimp"
   - "cool-retro-term"
+  - "xorg-xrandr"
+  - "lshw"
+  - "quiterss"
 
 started:
   - "docker.service"

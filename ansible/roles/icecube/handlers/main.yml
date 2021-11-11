@@ -1,8 +1,11 @@
 ---
-# handlers file for mypi
+# handlers
 
-- name: reload systemd
+- name: reload udev
+  become_user: "root"
+  command: udevadm control --reload
+
+- name: reload feeds
+  become: yes
   become_user: "{{ my_user }}"
-  systemd:
-    scope: user
-    daemon_reload: yes
+  command: newsboat -x reload

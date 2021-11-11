@@ -1,4 +1,4 @@
-- name: Load variables for home
+- name: Load variables
   include_vars:
     file: home.yml
 
@@ -6,6 +6,7 @@
   copy:
     src: "{{ role_path }}/files/xfce4/whiskermenu-8.rc"
     dest: "{{ home_dir }}/.config/xfce4/panel/whiskermenu-8.rc"
+
 
 - name: Xfce4 keyboard shortcuts
   copy:
@@ -19,12 +20,14 @@
     state: present
     executable: "{{ home_dir }}/{{ venv }}/bin/pip"
 
+
 - name: venv bin in path
   lineinfile:
     path: "{{ home_dir }}/.bashrc"
     state: present
     regexp: "^PATH="
     line: "PATH=$PATH:{{ home_dir }}/{{ venv}}/bin"
+
 
 - name: Python alias
   lineinfile:
@@ -33,12 +36,14 @@
     regexp: "^alias python="
     line: "alias python=\"{{ home_dir }}/{{ venv}}/bin/python\""
 
+
 - name: PiP alias
   lineinfile:
     path: "{{ home_dir }}/.bashrc"
     state: present
     regexp: "^alias pip="
     line: "alias pip=\"{{ home_dir }}/{{ venv}}/bin/pip\""
+
 
 - name: K9S alias
   lineinfile:
@@ -47,12 +52,14 @@
     regexp: "^alias k9s="
     line: "alias k9s=\"docker run derailed/k9s\""
 
+
 - name: docker
   lineinfile:
     path: "{{ home_dir }}/.bashrc"
     state: present
     regexp: "^alias d="
     line: "alias d=\"docker\""
+
 
 - name: terraform
   lineinfile:
@@ -61,13 +68,13 @@
     regexp: "^alias tf="
     line: "alias tf=\"docker run --mount type=bind,source={{ home_dir }}/{{ container_data_dir }}/terraform,destination=/workspace -ti {{ tf_image }}\""
 
+
 - name: Run this ansible role
   lineinfile:
     path: "{{ home_dir }}/.bashrc"
     state: present
     regexp: "^alias ap="
     line: "alias ap=\"cd {{ home_dir }}/git/desktop/ansible; sudo ansible-playbook -v main.yml; cd - \""
-
 
 
 - name: User directories
@@ -78,6 +85,7 @@
     mode: "0700"
   with_items: "{{ [home_dir] | product(user_home_dirs) | map('join') | list }}"
 
+
 - name: Desktop file templates
   template:
     src: "{{ item }}"
@@ -85,6 +93,15 @@
   with_fileglob: 
     - "templates/desktop/*.desktop"
 
+
+- name: RSS links
+  template:
+    src: "templates/.newsboat/urls"
+    dest: "{{ home_dir }}/.newsboat/"
+  notify:
+    - reload feeds
+
+    
 - name: Install Oh My ZSH
   shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
   args:

@@ -13,3 +13,10 @@
     dest: "/etc/X11/xorg.conf.d/"
   with_fileglob: 
     - "files/etc/X11/xorg.conf.d/*.conf"
+
+- name: Udev rules
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/udev/rules.d/"
+  with_fileglob: 
+    - "files/etc/udev/rules.d/*.rule"    
