@@ -32,8 +32,7 @@ pkgs:
   - "gimp"
   - "cool-retro-term"
   - "xorg-xrandr"
-  - "lshw"
-  - "quiterss"
+  - "helm"
 
 started:
   - "docker.service"
