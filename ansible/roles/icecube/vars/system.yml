@@ -1,3 +1,10 @@
+started:
+  - "docker.service"
+  - "tlp.service"
+
+stopped:
+  - "cups.service"
+
 pkgs:
   - "libinput"
   - "xdotool"
@@ -32,11 +39,10 @@ pkgs:
   - "gimp"
   - "cool-retro-term"
   - "xorg-xrandr"
+  - "telegram-desktop"
   - "helm"
-
-started:
-  - "docker.service"
-  - "tlp.service"
-    
-stopped:
-  - "cups.service"
+  - "rsync"
+  - "vagrant"
+  - "go"
+  - "go-tools"
+  - "ranger"

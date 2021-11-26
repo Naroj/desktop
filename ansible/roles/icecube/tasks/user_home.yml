@@ -13,6 +13,10 @@
     src: "{{ role_path }}/files/xfce4/xfce4-keyboard-shortcuts.xml"
     dest: "{{ home_dir }}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml"
 
+- name: Xfce4 panel
+  copy:
+    src: "{{ role_path }}/files/xfce4/xfce4-keyboard-shortcuts.xml"
+    dest: "{{ home_dir }}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml"
 
 - name: pip packages
   pip:
