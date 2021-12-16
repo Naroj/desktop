@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name={{ item.name }}
+Terminal=false
+GenericName={{ item.name }}
+Comment=chatty
+Exec={{ chrome_binary }} --app="{{ item.url }}" --user-data-dir={{ home_dir }}/{{ chrome_apps_dir}}/{{ item.name }}
+
+StartupNotify=true
+Categories=GTK;Network;Yonko;

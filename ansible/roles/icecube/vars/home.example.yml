@@ -23,6 +23,20 @@ user_home_dirs:
   - "{{ docker_data_dir }}"
   - "{{ user_app_dir }}"
 
+ssh_config:
+  - Host: ssh.example.com
+    User: git
+    PubkeyAcceptedAlgorithms: +ssh-rsa
+    HostkeyAlgorithms: +ssh-rsa
+  - Host: desk-test
+    User: vagrant
+    HostName: 127.0.0.1
+    Port: 3200
+  - Host: k3s-cluster
+    User: vagrant
+    HostName: 127.0.0.1
+    Port: 3201
+
 
 url_slack: "https://app.slack.example.com"
 url_teams: "https://teams.microsoft.com/example"

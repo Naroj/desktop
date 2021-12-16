@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AmsterdamAzure
+Terminal=false
+GenericName=AmsterdamAzure
+Comment=chatty
+Exec={{ chrome_binary }} --app="{{ url_azure }}" --user-data-dir={{ home_dir }}/{{ chrome_apps_dir}}/amsterdam-azure
+
+StartupNotify=true
+Categories=GTK;Network;Yonko;

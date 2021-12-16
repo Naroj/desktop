@@ -2,21 +2,11 @@
   include_vars:
     file: home.yml
 
-- name: Xfce4 whisker menu
-  copy:
-    src: "{{ role_path }}/files/xfce4/whiskermenu-8.rc"
-    dest: "{{ home_dir }}/.config/xfce4/panel/whiskermenu-8.rc"
-
 
 - name: Xfce4 keyboard shortcuts
   copy:
     src: "{{ role_path }}/files/xfce4/xfce4-keyboard-shortcuts.xml"
     dest: "{{ home_dir }}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml"
-
-- name: Xfce4 panel
-  copy:
-    src: "{{ role_path }}/files/xfce4/xfce4-keyboard-shortcuts.xml"
-    dest: "{{ home_dir }}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml"
 
 - name: pip packages
   pip:
@@ -24,62 +14,37 @@
     state: present
     executable: "{{ home_dir }}/{{ venv }}/bin/pip"
 
+- name: SSH dir
+  file:
+    path: "{{ home_dir }}/.ssh"
+    state: directory
+    owner: "{{ my_user }}"
+    group: "{{ my_user }}"
+    mode: "0700"
 
-- name: venv bin in path
+- name: SSH known hosts
+  lineinfile:
+    path: "{{ home_dir }}/.ssh/known_hosts"
+    create: yes
+    state: present
+    regexp: "^{{ item.host }}"
+    line: "{{item.host}} {{item.pubkey}}"
+  with_items: 
+    - "{{ ssh_known_hosts }}"
+
+- name: SSH client config
+  template: 
+    src: "templates/ssh_conf.j2"
+    dest: "{{ home_dir }}/.ssh/config"
+
+- name: Bashrc
   lineinfile:
     path: "{{ home_dir }}/.bashrc"
     state: present
-    regexp: "^PATH="
-    line: "PATH=$PATH:{{ home_dir }}/{{ venv}}/bin"
-
-
-- name: Python alias
-  lineinfile:
-    path: "{{ home_dir }}/.bashrc"
-    state: present
-    regexp: "^alias python="
-    line: "alias python=\"{{ home_dir }}/{{ venv}}/bin/python\""
-
-
-- name: PiP alias
-  lineinfile:
-    path: "{{ home_dir }}/.bashrc"
-    state: present
-    regexp: "^alias pip="
-    line: "alias pip=\"{{ home_dir }}/{{ venv}}/bin/pip\""
-
-
-- name: K9S alias
-  lineinfile:
-    path: "{{ home_dir }}/.bashrc"
-    state: present
-    regexp: "^alias k9s="
-    line: "alias k9s=\"docker run derailed/k9s\""
-
-
-- name: docker
-  lineinfile:
-    path: "{{ home_dir }}/.bashrc"
-    state: present
-    regexp: "^alias d="
-    line: "alias d=\"docker\""
-
-
-- name: terraform
-  lineinfile:
-    path: "{{ home_dir }}/.bashrc"
-    state: present
-    regexp: "^alias tf="
-    line: "alias tf=\"docker run --mount type=bind,source={{ home_dir }}/{{ container_data_dir }}/terraform,destination=/workspace -ti {{ tf_image }}\""
-
-
-- name: Run this ansible role
-  lineinfile:
-    path: "{{ home_dir }}/.bashrc"
-    state: present
-    regexp: "^alias ap="
-    line: "alias ap=\"cd {{ home_dir }}/git/desktop/ansible; sudo ansible-playbook -v main.yml; cd - \""
-
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - "{{ bashrc_entries }}"
 
 - name: User directories
   file:
@@ -90,13 +55,12 @@
   with_items: "{{ [home_dir] | product(user_home_dirs) | map('join') | list }}"
 
 
-- name: Desktop file templates
+- name: Render Chrome Apps
   template:
-    src: "{{ item }}"
-    dest: "{{ home_dir }}/{{ user_app_dir }}/"
-  with_fileglob: 
-    - "templates/desktop/*.desktop"
-
+    src: "templates/chrome-app.desktop.j2"
+    dest: "{{ home_dir }}/{{ user_app_dir }}/{{ item.name }}.desktop"
+  with_items:
+    - "{{ chrome_apps }}"
 
 - name: RSS links
   template:
@@ -104,6 +68,11 @@
     dest: "{{ home_dir }}/.newsboat/"
   notify:
     - reload feeds
+
+- name: GTK Bookmarks
+  template:
+    src: "templates/gtk-bookmarks.j2"
+    dest: "{{ home_dir }}/.config/gtk-3.0/bookmarks"
 
     
 - name: Install Oh My ZSH

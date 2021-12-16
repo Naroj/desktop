@@ -1,0 +1,8 @@
+{% for host in ssh_config %}
+{% for key, val in host.items() %}
+{% if loop.first %}{{ key }} {{ val }}
+{% else %}  {{ key }} {{ val }}
+{% endif %}
+{% endfor %}
+
+{% endfor %}

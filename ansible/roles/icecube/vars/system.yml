@@ -5,9 +5,16 @@ started:
 stopped:
   - "cups.service"
 
+pip_modules:
+  - "docker"
+
 pkgs:
+  - "lightdm"
+  - "networkmanager-openvpn"
+  - "manjaro-xfce-minimal-settings"
   - "libinput"
   - "xdotool"
+  - "mplayer"
   - "dnsutils"
   - "strace"
   - "sysstat"
@@ -40,9 +47,17 @@ pkgs:
   - "cool-retro-term"
   - "xorg-xrandr"
   - "telegram-desktop"
-  - "helm"
   - "rsync"
   - "vagrant"
   - "go"
   - "go-tools"
   - "ranger"
+  - "helm"
+  - "k9s"
+  - "kubectl"
+  - "terraform"
+  - "github-cli"
+  - "seahorse"
+  - "zsh"
+  - "lsof"
+  - "git"

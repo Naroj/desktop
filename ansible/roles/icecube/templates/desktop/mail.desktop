@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=AmsterdamMail
+Terminal=false
+GenericName=AmsterdamMail
+Comment=chatty
+Exec={{ chrome_binary }} --app="{{ url_mail }}" --user-data-dir={{ home_dir }}/{{ chrome_apps_dir}}/amsterdam-mail
+
+StartupNotify=true
+Categories=GTK;Network;
