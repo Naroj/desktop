@@ -1,0 +1,21 @@
+az_dirs:
+  - "image"
+
+az_envs:
+  - "ont"
+  - "acc"
+  - "prd"
+
+az_user:
+  name: azzie
+  uid: 1005
+  home: /home/azzie
+  password: '!'
+  dirs: "{{ az_envs + az_dirs }}"
+
+az_img:
+  base: "mcr.microsoft.com/azure-cli:2.31.0"
+  docker_file_template: "Dockerfile.azure-client.j2"
+  build_dir: "{{ az_user.home }}/image"
+  name: "ams-az"
+  tag: wonderbox

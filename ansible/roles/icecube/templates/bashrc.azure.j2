@@ -1,0 +1,4 @@
+{% for env in az_envs %}
+alias az-{{ env }}="docker run -ti -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} az"
+alias k9s-{{ env }}="docker run -ti -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} k9s"
+{% endfor %}

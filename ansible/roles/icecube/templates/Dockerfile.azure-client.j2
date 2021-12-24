@@ -1,0 +1,13 @@
+FROM {{ az_img.base }}
+MAINTAINER Dikkert
+
+ENV USER={{ az_user.name }}
+ENV HOME={{ az_user.home }}
+ENV UID={{ az_user.uid }}
+
+RUN adduser -D -u $UID $USER && \
+    apk add k9s && \
+    apk add vim
+
+WORKDIR $HOME
+USER $USER
