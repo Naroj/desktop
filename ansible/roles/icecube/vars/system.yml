@@ -61,3 +61,4 @@ pkgs:
   - "zsh"
   - "lsof"
   - "git"
+  - "qgis"

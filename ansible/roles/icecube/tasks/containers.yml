@@ -1,14 +1,49 @@
-- name: k9s
-  docker_image:
-    name: derailed/k9s
-    tag: latest
-    source: pull
+- name: Load general variables
+  include_vars:
+    file: general.yml
 
-- name: terraform
+- name: Az cli user
+  user:
+    name: "{{ az_user.name }}"
+    uid: "{{ az_user.uid }}"
+    home: "{{ az_user.home }}"
+    create_home: yes
+    comment: "disabled user for use in docker containers"
+    password: '!'
+  register: azu
+
+- name: Az cli dir structure
+  file:
+    path: "{{ az_user.home }}/{{ item }}"
+    owner: "{{ az_user.name }}"
+    state: directory
+    mode: "0700"
+  with_items: "{{ az_user.dirs }}"
+
+
+- name: Az cli Build template
+  template:
+    src: "templates/{{ az_img.docker_file_template }}"
+    dest: "{{ az_img.build_dir }}/Dockerfile"
+  register: dockerfile
+
+# ugly removal of image to force a rebuild when the dockerfile is changed
+- name: Az cli remove image
   docker_image:
-    name: zenika/terraform-azure-cli
-    tag: latest
-    source: pull
+    name: "{{ az_img.name }}" 
+    tag: "{{ az_img.tag }}"
+    state: absent
+    force_absent: yes
+  when: dockerfile.changed
+
+- name: Az cli build image
+  docker_image:
+    name: "{{ az_img.name }}" 
+    tag: "{{ az_img.tag }}"
+    state: present
+    source: build
+    build:
+      path: "{{ az_img.build_dir }}"
 
 
 #- name: Terraform container

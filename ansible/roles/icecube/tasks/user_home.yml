@@ -37,6 +37,11 @@
     src: "templates/ssh_conf.j2"
     dest: "{{ home_dir }}/.ssh/config"
 
+- name: Azure Bash functions
+  template:
+    src: "templates/bashrc.azure.j2"
+    dest: "{{ home_dir }}/{{ az_bashrc }}"
+
 - name: Bashrc
   lineinfile:
     path: "{{ home_dir }}/.bashrc"
@@ -53,7 +58,6 @@
     state: directory
     mode: "0700"
   with_items: "{{ [home_dir] | product(user_home_dirs) | map('join') | list }}"
-
 
 - name: Render Chrome Apps
   template:

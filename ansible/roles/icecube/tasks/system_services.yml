@@ -8,7 +8,7 @@
 - name: start the music
   systemd:
     name: "{{ item }}"
-    enabled: no
+    enabled: yes
     state: started
   with_items: "{{ started }}"
 

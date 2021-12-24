@@ -23,7 +23,6 @@
 
 - name: user containers
   become: yes
-  become_user: "{{ my_user }}"
   import_tasks: containers.yml
   tags: "docker"
 

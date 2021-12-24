@@ -2,6 +2,10 @@
   include_vars:
     file: system.yml
 
+- name: Load general variables
+  include_vars:
+    file: general.yml
+
 - name: install desired packages
   pacman:
     pkg: "{{ pkgs }}"
