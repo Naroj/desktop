@@ -12,14 +12,37 @@
     password: '!'
   register: azu
 
-- name: Az cli dir structure
+- name: Az cli home dirs
   file:
     path: "{{ az_user.home }}/{{ item }}"
     owner: "{{ az_user.name }}"
     state: directory
     mode: "0700"
-  with_items: "{{ az_user.dirs }}"
+  with_items: "{{ az_dirs }}"
 
+- name: Az cli env dirs
+  file:
+    path: "{{ az_user.home }}/{{ item.key }}/.k9s"
+    owner: "{{ az_user.name }}"
+    state: directory
+    mode: "0700"
+  with_dict: "{{ az_envs }}"
+
+- name: K9S config
+  template:
+    src: "templates/k9s-conf.yml.j2"
+    dest: "{{ az_user.home }}/{{ item.key }}/.k9s/config.yml"
+    owner: "{{ az_user.name }}"
+    mode: "0700"
+  with_dict: "{{ az_envs }}"
+
+- name: K9S skin
+  copy:
+    src: files/k9s-transparant-skin.yml
+    dest: "{{ az_user.home }}/{{ item.key }}/.k9s/skin.yml"
+    owner: "{{ az_user.name }}"
+    mode: "0700"
+  with_dict: "{{ az_envs }}"
 
 - name: Az cli Build template
   template:

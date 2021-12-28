@@ -29,3 +29,11 @@
     dest: "/etc/udev/rules.d/"
   with_fileglob: 
     - "files/etc/udev/rules.d/*.rule"    
+
+- name: User
+  user:
+    name: "{{ my_user }}"
+    comment: "Henry likes broccoli"
+    append: yes
+    shell: "{{ my_shell }}"
+    groups: "{{ user_groups }}"

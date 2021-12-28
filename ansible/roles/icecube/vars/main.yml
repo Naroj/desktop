@@ -3,6 +3,7 @@
 #
 
 my_user: "ahimsa"
+my_shell: "/usr/bin/zsh"
 
 user_groups:
   - "wheel"

@@ -37,19 +37,18 @@
     src: "templates/ssh_conf.j2"
     dest: "{{ home_dir }}/.ssh/config"
 
-- name: Azure Bash functions
+- name: Shell aliases
   template:
-    src: "templates/bashrc.azure.j2"
-    dest: "{{ home_dir }}/{{ az_bashrc }}"
+    src: "templates/{{ shell_alias_file }}.j2"
+    dest: "{{ home_dir }}/{{ shell_alias_file }}"
 
-- name: Bashrc
+- name: Add shell aliases to my shells
   lineinfile:
-    path: "{{ home_dir }}/.bashrc"
+    path: "{{ home_dir }}/{{ item }}"
     state: present
-    regexp: "{{ item.regexp }}"
-    line: "{{ item.line }}"
-  with_items:
-    - "{{ bashrc_entries }}"
+    regexp: "^source {{ home_dir }}/{{ shell_alias_file }}"
+    line: "source {{ home_dir }}/{{ shell_alias_file }}"
+  with_items: "{{ shell_confs }}" 
 
 - name: User directories
   file:

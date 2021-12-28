@@ -2,16 +2,15 @@ az_dirs:
   - "image"
 
 az_envs:
-  - "ont"
-  - "acc"
-  - "prd"
+  ont: "aks-davebbn1-ont-weu-01"
+  acc: "aks-davebbn1-acc-weu-01"
 
 az_user:
   name: azzie
   uid: 1005
   home: /home/azzie
   password: '!'
-  dirs: "{{ az_envs + az_dirs }}"
+  dirs: "{{ az_dirs }}"
 
 az_img:
   base: "mcr.microsoft.com/azure-cli:2.31.0"
