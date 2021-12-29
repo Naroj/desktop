@@ -54,9 +54,9 @@ def parse_argv(argvs: list) -> dict:
 
 def init_exchange() -> Account:
     """ """
-    my_account = "***"
-    my_email = "j****"
-    passw = "*****$"
+    my_account = "joran.franx@amsterdam.nl"
+    my_email = "joran.franx@amsterdam.nl"
+    passw = "Tw!cD@{15uJ$"
     try:
         creds = Credentials(my_account, passw)
         account = Account(my_email, credentials=creds, autodiscover=True)
