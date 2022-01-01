@@ -77,6 +77,10 @@
     src: "templates/gtk-bookmarks.j2"
     dest: "{{ home_dir }}/.config/gtk-3.0/bookmarks"
 
+- name: XFCE4 Terminal
+  copy:
+    src: "files/xfce4/terminalc"
+    dest: "{{ home_dir }}/.config/xfce4/terminal/terminalrc"
     
 - name: Install Oh My ZSH
   shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"

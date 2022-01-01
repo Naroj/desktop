@@ -1,14 +1,32 @@
 started:
   - "docker.service"
   - "tlp.service"
+  - "tor.service"
 
 stopped:
   - "cups.service"
+
+tor_params:
+  user: "tor"
+  port: 9051
+  policy_accept: "127.0.0.1/32"
+  policy_reject: "*"
+  log_level: "debug"
+
+tor_dns:
+  proxy_unitfile: "tor-dns-proxy.service"
+  resolver: "dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion"
+  resolv_port: 253
+  ip_addr: "127.0.0.1"
+  listen_port: 53
+  socksport: "{{ tor_params.port }}"
+
 
 pip_modules:
   - "docker"
 
 pkgs:
+  - "socat"
   - "lightdm"
   - "networkmanager-openvpn"
   - "manjaro-xfce-minimal-settings"
@@ -18,6 +36,7 @@ pkgs:
   - "dnsutils"
   - "strace"
   - "sysstat"
+  - "torsocks"
   - "torbrowser-launcher"
   - "make"
   - "gcc"
@@ -63,4 +82,5 @@ pkgs:
   - "git"
   - "qgis"
   - "bat"
+  - "noto-fonts-emoji"
   - "zsh-syntax-highlighting"

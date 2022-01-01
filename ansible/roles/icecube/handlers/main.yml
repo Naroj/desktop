@@ -5,7 +5,15 @@
   become_user: "root"
   command: udevadm control --reload
 
+- name: restart tor
+  become_user: "root"
+  command: systemctl restart tor
+
 - name: reload feeds
   become: yes
   become_user: "{{ my_user }}"
   command: newsboat -x reload
+
+- name: reload systemd
+  systemd:
+    daemon_reload: yes
