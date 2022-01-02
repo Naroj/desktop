@@ -1,0 +1,7 @@
+User {{ tor_params.user }}
+SOCKSPort {{ tor_params.port }}
+SOCKSPolicy accept {{ tor_params.policy_accept }}
+SOCKSPolicy reject {{ tor_params.policy_reject }}
+Log {{ tor_params.log_level }} syslog
+DataDirectory /var/lib/tor
+#%include /etc/torrc.d/*.conf

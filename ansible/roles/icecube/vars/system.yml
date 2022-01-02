@@ -15,6 +15,7 @@ tor_params:
 
 tor_dns:
   proxy_unitfile: "tor-dns-proxy.service"
+  query_timeout: 10
   resolver: "dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion"
   resolv_port: 253
   ip_addr: "127.0.0.1"
@@ -26,6 +27,10 @@ pip_modules:
   - "docker"
 
 pkgs:
+  - "virt-manager"
+  - "libvirt"
+  - "qemu"
+  - "bridge-utils"
   - "socat"
   - "lightdm"
   - "networkmanager-openvpn"
