@@ -1,0 +1,7 @@
+---
+- name: Desktop
+  become: false
+  hosts: icecube-test
+
+  roles:
+    - role: icecube

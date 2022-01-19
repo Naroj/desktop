@@ -4,10 +4,14 @@ MAINTAINER Dikkert
 ENV USER={{ az_user.name }}
 ENV HOME={{ az_user.home }}
 ENV UID={{ az_user.uid }}
+ENV HELM_URL="https://get.helm.sh/helm-v3.8.0-rc.1-linux-amd64.tar.gz"
 
 RUN adduser -D -u $UID $USER && \
     apk add k9s && \
-    apk add vim
+    apk add vim && \
+    wget -O /tmp/helm.tgz "${HELM_URL}" && \
+    tar -xf /tmp/helm.tgz -C /tmp && mv -vf /tmp/linux-amd64/helm /usr/local/bin/helm && \
+    chmod 755 /usr/local/bin/helm
 
 WORKDIR $HOME
 USER $USER

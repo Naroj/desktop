@@ -58,6 +58,12 @@
     mode: "0700"
   with_items: "{{ [home_dir] | product(user_home_dirs) | map('join') | list }}"
 
+    #- name: Tmux
+    #  copy:
+    #    src: "files/.tmux"
+    #    dest: "{{ home_dir }}/.tmux"
+    #    owner: "{{ my_user }}"
+
 - name: Render Chrome Apps
   template:
     src: "templates/chrome-app.desktop.j2"

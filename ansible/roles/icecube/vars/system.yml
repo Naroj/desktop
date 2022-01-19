@@ -1,33 +1,28 @@
 started:
   - "docker.service"
   - "tlp.service"
-  - "tor.service"
+  - "dnscrypt-proxy.service"
 
 stopped:
   - "cups.service"
 
-tor_params:
-  user: "tor"
-  port: 9051
-  policy_accept: "127.0.0.1/32"
-  policy_reject: "*"
-  log_level: "debug"
-
-tor_dns:
-  proxy_unitfile: "tor-dns-proxy.service"
-  query_timeout: 10
-  resolver: "dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion"
-  resolv_port: 253
-  ip_addr: "127.0.0.1"
-  listen_port: 53
-  socksport: "{{ tor_params.port }}"
-
-
 pip_modules:
   - "docker"
+  - "protonvpn-cli"
+
+resolvers:
+  - "127.0.0.1"
+
+fallback_resolvers:
+  - "1.1.1.1"
+  - "1.0.0.1"
 
 pkgs:
+  - "dnscrypt-proxy"
+  - "wireguard-tools"
   - "virt-manager"
+  - "flameshot"
+  - "pycharm-community-edition"
   - "libvirt"
   - "qemu"
   - "bridge-utils"
@@ -87,5 +82,6 @@ pkgs:
   - "git"
   - "qgis"
   - "bat"
+  - "gpicview"
   - "noto-fonts-emoji"
   - "zsh-syntax-highlighting"

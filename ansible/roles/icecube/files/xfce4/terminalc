@@ -32,5 +32,5 @@ MiscShowUnsafePasteDialog=TRUE
 FontName=Source Code Pro Medium 12
 ColorForeground=#b851ffffa665
 BackgroundMode=TERMINAL_BACKGROUND_IMAGE
-BackgroundImageShading=0,710000
+BackgroundImageShading=0,870000
 

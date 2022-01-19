@@ -4,6 +4,7 @@ az_dirs:
 az_envs:
   ont: "aks-davebbn1-ont-weu-01"
   acc: "aks-davebbn1-acc-weu-01"
+  prd: "aks-davebbn1-prd-weu-01"
 
 az_user:
   name: azzie

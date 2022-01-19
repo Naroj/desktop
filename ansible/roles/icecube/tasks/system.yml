@@ -16,38 +16,12 @@
     name: "{{ pip_modules }}"
     state: present
 
-- name: tor proxy
+- name: Resolver
   template:
-    src: templates/etc/torrc.j2
-    dest: /etc/tor/torrc
+    src: templates/etc/resolv.conf.j2
+    dest: /etc/resolv.conf
     owner: root
     mode: 0644
-  notify:
-    - restart tor
-
-- name: tor dns in hostsfile
-  lineinfile:
-    path: "/etc/hosts"
-    create: no
-    state: present
-    regexp: "^127.0.0.1"
-    line: "127.0.0.1 localhost {{ ansible_hostname }} {{ tor_dns.resolver }}"
-
-- name: socat tor DNS proxy
-  template:
-    src: templates/systemd/{{ tor_dns.proxy_unitfile }}.j2
-    dest: /etc/systemd/system/{{ tor_dns.proxy_unitfile }}
-    owner: root
-    mode: 0655
-  register: dns_proxy_unit
-
-- name: get the proxy going
-  systemd:
-    name: "{{ tor_dns.proxy_unitfile }}"
-    enabled: yes
-    state: restarted
-    daemon_reload: yes
-  when: dns_proxy_unit.changed
 
 - name: Xorg files
   copy:
