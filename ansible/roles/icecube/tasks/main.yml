@@ -5,27 +5,39 @@
 #   import_tasks: pre_flight.yml
 #   tags: "pf"
 
-- name: system
+- name: My System
   become: yes
   import_tasks: system.yml
-  tags: "system"
+  tags:
+    - "never"
+    - "system"
 
-- name: services
+- name: System services
   become: yes
   import_tasks: system_services.yml
-  tags: "services"
+  tags:
+    - "never"
+    - "system"
+
+- name: Azure containers
+  become: yes
+  import_tasks: containers.yml
+  tags: 
+    - "never" 
+    - "system"
 
 - name: user home
   become: yes
   become_user: "{{ my_user }}"
   import_tasks: user_home.yml
-  tags: "user"
+  tags: 
+    - "never"
+    - "user"
 
-- name: user containers
-  become: yes
-  import_tasks: containers.yml
-  tags: "docker"
-
-
+- name: user VPN
+  import_tasks: user_vpn.yml
+  tags: 
+    - "never"
+    - "user"
 
 

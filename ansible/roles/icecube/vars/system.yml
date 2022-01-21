@@ -20,6 +20,7 @@ fallback_resolvers:
 pkgs:
   - "dnscrypt-proxy"
   - "wireguard-tools"
+  - "protonvpn-gui"
   - "virt-manager"
   - "flameshot"
   - "pycharm-community-edition"

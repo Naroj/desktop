@@ -1,0 +1,46 @@
+- name: Load variables
+  include_vars:
+    file: home.yml
+
+- name: ProtonVPN script
+  copy:
+    src: "files/user/bin/randomize_pvpn"
+    dest: "{{ home_dir }}/bin/randomize_pvpn"
+    owner: "{{ my_user }}"
+    group: "{{ my_user }}"
+    mode: 0750
+
+- name: Peering randomize service
+  template: 
+    src: "templates/systemd/user/randomize_pvpn.service.j2"
+    dest: "{{ home_dir }}/.config/systemd/user/randomize_pvpn.service"
+  register: service
+  notify:
+    - reload systemd
+
+- name: Randomizer timer
+  template: 
+    src: "templates/systemd/user/randomize_pvpn.timer.j2"
+    dest: "{{ home_dir }}/.config/systemd/user/randomize_pvpn.timer"
+  register: timer
+  notify:
+    - reload systemd
+
+- name: ProtonVPN randomizer timer
+  systemd:
+    name: randomize_pvpn.timer
+    scope: user
+    daemon_reload: yes
+    enabled: yes
+    force: yes
+    state: started
+
+- name: ProtonVPN randomizer service
+  systemd:
+    name: randomize_pvpn.service
+    scope: user
+    daemon_reload: yes
+    force: yes
+    state: restarted
+  when: service.changed
+

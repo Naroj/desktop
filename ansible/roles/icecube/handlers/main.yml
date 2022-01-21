@@ -15,8 +15,9 @@
   command: newsboat -x reload
 
 - name: reload systemd
-  systemd:
-    daemon_reload: yes
+  become: yes
+  become_user: "{{ my_user }}"
+  command: systemctl --user daemon-reload
 
 - name: restart doh-client
   command: systemctl restart doh-client

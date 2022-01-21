@@ -5,12 +5,14 @@ alias python="{{ home_dir }}/{{ venv }}/bin/python"
 alias pip="{{ home_dir }}/{{ venv }}/bin/pip"
 alias d="docker"
 alias cat="bat"
-alias ap="cd {{ home_dir }}/git/priv/desktop/ansible; sudo ansible-playbook -v main.yml; cd - "
+alias ap_system="cd {{ home_dir }}/git/priv/desktop/ansible; sudo ansible-playbook --tag system -v main.yml; cd - "
+alias ap_user="cd {{ home_dir }}/git/priv/desktop/ansible; ansible-playbook --tag user -v main.yml; cd - "
 
 # Azure
 {% for env in az_envs %}
 alias az-{{ env }}="docker run -ti -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} az"
 alias k9s-{{ env }}="docker run -ti -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} k9s"
+alias helm-{{ env }}="docker run -ti -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} helm"
 {% endfor %}
 
 function xr_my_mon() {
@@ -41,4 +43,11 @@ function xr_laptop_mon_off () {
 
 function xr_laptop_mon_on () {
     xrandr --output eDP-1 --auto
+}
+
+function xr_lap_right() {
+    xrandr --output HDMI-1 --auto
+    xrandr --output eDP-1 --auto
+    xrandr --output eDP-1 --right-of HDMI-1
+    xrandr --output HDMI-1 --primary   
 }

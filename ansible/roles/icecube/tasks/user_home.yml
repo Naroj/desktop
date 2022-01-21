@@ -1,7 +1,10 @@
-- name: Load variables
+- name: Load user variables
   include_vars:
     file: home.yml
 
+- name: Load general variables
+  include_vars:
+    file: general.yml
 
 - name: Xfce4 keyboard shortcuts
   copy:

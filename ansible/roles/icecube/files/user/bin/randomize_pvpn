@@ -1,0 +1,38 @@
+#!/bin/env bash
+
+# Choose peer from randomly chosen country in list
+# - - - - - - - - <<
+
+# env var is set by systemd unit file
+# countries='NL,DE,BE,PL,HU,FR'
+
+SLEEP_SECONDS_AFTER_FAIL=5
+
+function check_cli_package() {
+    pacman -Q protonvpn-cli &> /dev/null
+    return $?
+}
+
+function detect_teams_call () {
+    echo "not implemented yet"
+    return 0
+}
+
+function randomize_peer() {
+    CHOICE=$(python -c 'import random; import os;c=os.getenv("countries").split(",");print(random.choice(c))')
+    protonvpn-cli c --cc $CHOICE
+    if [ $? -ne 0 ]
+    then
+        logger --stderr "randomizing_peer failed, retrying.."
+	sleep $SLEEP_SECONDS_AFTER_FAIL
+	randomize_peer
+    fi
+}
+
+if [ check_cli_package ]
+then
+    randomize_peer
+else
+    logger --stderr "can not rotate VPN peer, protonvpn-cli package is not installed"
+    exit 1
+fi

@@ -1,0 +1,9 @@
+[Unit]
+Description=Schedule random VPN exit node choice
+
+[Timer]
+OnUnitActiveSec={{ protonvpn_peer_rotation }}
+Persistent=true
+
+[Install]
+WantedBy=default.target
