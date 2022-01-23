@@ -19,5 +19,5 @@
   become_user: "{{ my_user }}"
   command: systemctl --user daemon-reload
 
-- name: restart doh-client
-  command: systemctl restart doh-client
+- name: restart dnscrypt
+  command: systemctl restart dnscrypt-proxy

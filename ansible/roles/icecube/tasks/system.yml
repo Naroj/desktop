@@ -23,6 +23,17 @@
     owner: root
     mode: 0644
 
+- name: DnsCrypt conf
+  copy:
+    src: "files/etc/dnscrypt-proxy.toml"
+    dest: "/etc/dnscrypt-proxy/dnscrypt-proxy.toml"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify:
+    - restart dnscrypt
+
+
 - name: Xorg files
   copy:
     src: "{{ item }}"

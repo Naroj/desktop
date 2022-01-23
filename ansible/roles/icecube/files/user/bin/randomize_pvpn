@@ -1,38 +1,46 @@
-#!/bin/env bash
+#!/usr/bin/env python3 
 
-# Choose peer from randomly chosen country in list
-# - - - - - - - - <<
+import random
+import os
+import pprint
+from subprocess import Popen, PIPE, STDOUT
 
-# env var is set by systemd unit file
-# countries='NL,DE,BE,PL,HU,FR'
 
-SLEEP_SECONDS_AFTER_FAIL=5
+"""
+Ugly script to iterate psuedo-randomly over a selection of countries
+Always selects a different country than we're currently connected to
+Probably it's still buggy, use at own risk
+"""
 
-function check_cli_package() {
-    pacman -Q protonvpn-cli &> /dev/null
-    return $?
-}
 
-function detect_teams_call () {
-    echo "not implemented yet"
-    return 0
-}
+def remove_current_country(all_countries: list) -> list:
+    """ Do not connect twice to the same country in a row """
+    stat = Popen('protonvpn-cli status', shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+    output = stat.stdout.read().decode()
+    if "No active ProtonVPN" in output:
+        return all_countries
+    get_server = [ x for x in output.split('\n') if x.startswith("Server:") ][0]
+    last_choice = get_server.split()[1].split('#')[0]
+    all_countries.pop(all_countries.index(last_choice))
+    print(f"removing country {last_choice} from choices")
+    return all_countries
 
-function randomize_peer() {
-    CHOICE=$(python -c 'import random; import os;c=os.getenv("countries").split(",");print(random.choice(c))')
-    protonvpn-cli c --cc $CHOICE
-    if [ $? -ne 0 ]
-    then
-        logger --stderr "randomizing_peer failed, retrying.."
-	sleep $SLEEP_SECONDS_AFTER_FAIL
-	randomize_peer
-    fi
-}
 
-if [ check_cli_package ]
-then
-    randomize_peer
-else
-    logger --stderr "can not rotate VPN peer, protonvpn-cli package is not installed"
-    exit 1
-fi
+def new_peer(country_selection: list) -> None:
+    """ select a new peer from given country list """
+    choice = random.choice(country_selection)
+    print(f"selecting new country {choice} to connect to")
+    reconnect = Popen(f"protonvpn-cli c --c {choice}", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+
+
+def main():
+    """ get the music starte """
+    countries: list = os.getenv("countries").split(",")
+    if not countries:
+        raise UserWarning("no countries env defined or empty")        
+    my_selection = remove_current_country(countries)
+    new_peer(my_selection)
+
+
+if __name__ == "__main__":
+    main()
