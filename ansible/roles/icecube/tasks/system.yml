@@ -33,6 +33,16 @@
   notify:
     - restart dnscrypt
 
+- name: DnsCrypt unit overrides
+  copy:
+    src: "files/etc/systemd/dnscrypt-proxy-override.conf"
+    dest: "/etc/systemd/system/dnscrypt-proxy.service.d/override.conf"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  notify:
+    - reload systemd
+    - restart dnscrypt
 
 - name: Xorg files
   copy:

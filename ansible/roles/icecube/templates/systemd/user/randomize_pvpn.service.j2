@@ -3,7 +3,7 @@ Description=Pseudo random ProtonVPN exit node
 
 [Service]
 Type=simple
-Environment=countries={{ protonvpn_countries | join(',') }}
+Environment=countries={{ protonvpn.peer_countries | join(',') }}
 ExecStart={{ home_dir }}/bin/randomize_pvpn
 
 [Install]

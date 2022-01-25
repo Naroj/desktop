@@ -11,7 +11,7 @@ alias ap_user="cd {{ home_dir }}/git/priv/desktop/ansible; ansible-playbook --ta
 # Azure
 {% for env in az_envs %}
 alias az-{{ env }}="docker run -ti -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} az"
-alias k9s-{{ env }}="docker run -ti -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} k9s"
+alias k9s-{{ env }}="docker run -ti -p 8080:8080 -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} k9s"
 alias helm-{{ env }}="docker run -ti -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} helm"
 {% endfor %}
 

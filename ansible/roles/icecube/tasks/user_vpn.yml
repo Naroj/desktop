@@ -10,23 +10,36 @@
     group: "{{ my_user }}"
     mode: 0750
 
+
+- name: User config dir
+  file:
+    path: "{{ home_dir }}/.config/protonvpn"
+    state: directory
+    mode: "0700"
+
+- name: User config file
+  template:
+    src: "templates/systemd/user/protonvpn_user_conf.json.j2"
+    dest: "{{ home_dir }}/.config/protonvpn/user_configurations.json"
+    mode: "0644"
+
 - name: Peering randomize service
   template: 
     src: "templates/systemd/user/randomize_pvpn.service.j2"
     dest: "{{ home_dir }}/.config/systemd/user/randomize_pvpn.service"
   register: service
   notify:
-    - reload systemd
+    - reload user-systemd
 
-- name: Randomizer timer
+- name: Randomizer systemd timer unit
   template: 
     src: "templates/systemd/user/randomize_pvpn.timer.j2"
     dest: "{{ home_dir }}/.config/systemd/user/randomize_pvpn.timer"
   register: timer
   notify:
-    - reload systemd
+    - reload user-systemd
 
-- name: ProtonVPN randomizer timer
+- name: Enable ProtonVPN randomizer timer
   systemd:
     name: randomize_pvpn.timer
     scope: user

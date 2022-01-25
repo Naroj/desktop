@@ -15,6 +15,9 @@
   command: newsboat -x reload
 
 - name: reload systemd
+  command: systemctl daemon-reload
+
+- name: reload user-systemd
   become: yes
   become_user: "{{ my_user }}"
   command: systemctl --user daemon-reload

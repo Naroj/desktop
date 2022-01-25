@@ -12,6 +12,7 @@ Always selects a different country than we're currently connected to
 Probably it's still buggy, use at own risk
 """
 
+FALLBACK_COUNTRIES = ["BE","AT","FR"]
 
 def remove_current_country(all_countries: list) -> list:
     """ Do not connect twice to the same country in a row """
@@ -31,13 +32,18 @@ def new_peer(country_selection: list) -> None:
     choice = random.choice(country_selection)
     print(f"selecting new country {choice} to connect to")
     reconnect = Popen(f"protonvpn-cli c --c {choice}", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+    output = reconnect.communicate()
+    print(f"{output[0]}")
 
 
 def main():
     """ get the music starte """
-    countries: list = os.getenv("countries").split(",")
-    if not countries:
-        raise UserWarning("no countries env defined or empty")        
+    load_countries: list = os.getenv("countries")
+    if load_countries:
+        countries: list = os.getenv("countries").split(",")
+    elif load_countries is None:
+        print(f"no countries env found, using fallback: {FALLBACK_COUNTRIES}")
+        countries = FALLBACK_COUNTRIES
     my_selection = remove_current_country(countries)
     new_peer(my_selection)
 
