@@ -12,7 +12,7 @@ Always selects a different country than we're currently connected to
 Probably it's still buggy, use at own risk
 """
 
-FALLBACK_COUNTRIES = ["BE","AT","FR"]
+FALLBACK_COUNTRIES = ["NL", "BE","AT","FR"]
 
 def remove_current_country(all_countries: list) -> list:
     """ Do not connect twice to the same country in a row """
@@ -22,8 +22,11 @@ def remove_current_country(all_countries: list) -> list:
         return all_countries
     get_server = [ x for x in output.split('\n') if x.startswith("Server:") ][0]
     last_choice = get_server.split()[1].split('#')[0]
-    all_countries.pop(all_countries.index(last_choice))
-    print(f"removing country {last_choice} from choices")
+    try:
+        print(f"removing country {last_choice} from choices")
+        all_countries.pop(all_countries.index(last_choice))
+    except ValueError:
+        pass
     return all_countries
 
 

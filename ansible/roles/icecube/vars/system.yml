@@ -18,6 +18,10 @@ fallback_resolvers:
   - "1.0.0.1"
 
 pkgs:
+  - "transmission-gtk"
+  - "libreoffice"
+  - "signal-desktop"
+  - "whois"
   - "dnscrypt-proxy"
   - "wireguard-tools"
   - "protonvpn-gui"

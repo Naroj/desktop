@@ -15,46 +15,53 @@ alias k9s-{{ env }}="docker run -ti -p 8080:8080 -v {{ az_user.home }}/{{ env }}
 alias helm-{{ env }}="docker run -ti -v {{ az_user.home }}/{{ env }}:{{ az_user.home }} {{ az_img.name }}:{{ az_img.tag }} helm"
 {% endfor %}
 
+function discover_mon() {
+    LAP="eDP-1"
+    MON=$(xrandr | grep " connected " | grep -v $LAP | awk '{print $1}')
+    if [[ $MON =~ "HDMI" ]] && [[ $MON =~ "DP-" ]]
+    then
+	MON=$(echo $MON | egrep ^DP)
+    fi
+}
+
 function xr_my_mon() {
-    xrandr --output HDMI-1 --auto
-    xrandr --output eDP-1 --auto
-    xrandr --output HDMI-1 --right-of eDP-1
-    xrandr --output HDMI-1 --primary
+    discover_mon
+    xrandr --output $MON --auto
+    xrandr --output $LAP --auto
+    xrandr --output $MON --right-of $LAP
+    xrandr --output $MON --primary
 }
 
-function xr_conor_desk() {
-    xrandr --output HDMI-1 --auto
-    xrandr --output DP-1-8 --auto
-    xrandr --output HDMI-1 --right-of DP-1-8
-    xrandr --output eDP-1 --off
-    xrandr --output DP-1-8 --primary
+function xr_lap_mon_off () {
+    discover_mon
+    xrandr --output $LAP --off
 }
 
-function xr_usbc_mon_desk () {
-    xrandr --output eDP-1 --auto
-    xrandr --output DP-1 --auto
-    xrandr --output eDP-1 --left-of DP-1
-    xrandr --output DP-1 --primary
-}
-
-function xr_laptop_mon_off () {
-    xrandr --output eDP-1 --off
-}
-
-function xr_laptop_mon_on () {
-    xrandr --output eDP-1 --auto
+function xr_lap_mon_on () {
+    discover_mon
+    xrandr --output $LAP --auto
 }
 
 function xr_lap_right() {
-    xrandr --output HDMI-1 --auto
-    xrandr --output eDP-1 --auto
-    xrandr --output eDP-1 --right-of HDMI-1
-    xrandr --output HDMI-1 --primary   
+    discover_mon
+    xrandr --output $MON --auto
+    xrandr --output $LAP --auto
+    xrandr --output $LAP --right-of $MON
+    xrandr --output $MON --primary   
 }
 
-function xr_laptop_below_mon () {
-    xrandr --output HDMI-1 --auto
-    xrandr --output eDP-1 --auto
-    xrandr --output HDMI-1 --primary    
-    xrandr --output eDP-1 --below HDMI-1
+function xr_lap_left() {
+    discover_mon
+    xrandr --output $MON --auto
+    xrandr --output $LAP --auto
+    xrandr --output $LAP --left-of $MON
+    xrandr --output $MON --primary
+}
+
+function xr_lap_below_mon () {
+    discover_mon
+    xrandr --output $MON --auto
+    xrandr --output $LAP --auto
+    xrandr --output $MON --primary    
+    xrandr --output $LAP --below $MON
 }

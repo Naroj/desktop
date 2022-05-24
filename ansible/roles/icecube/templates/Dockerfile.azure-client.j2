@@ -5,13 +5,19 @@ ENV USER={{ az_user.name }}
 ENV HOME={{ az_user.home }}
 ENV UID={{ az_user.uid }}
 ENV HELM_URL="https://get.helm.sh/helm-v3.8.0-rc.1-linux-amd64.tar.gz"
+ENV KUBE_URL="https://storage.googleapis.com/kubernetes-release/release/v1.18.0/bin/linux/amd64/kubectl"
+ENV KUBE_COLOR_INSTALL_URL="github.com/dty1er/kubecolor/cmd/kubecolor@latest"
 
 RUN adduser -D -u $UID $USER && \
+    apk add go && \
     apk add k9s && \
     apk add vim && \
+    go install ${KUBE_COLOR_INSTALL_URL} && \
     wget -O /tmp/helm.tgz "${HELM_URL}" && \
     tar -xf /tmp/helm.tgz -C /tmp && mv -vf /tmp/linux-amd64/helm /usr/local/bin/helm && \
-    chmod 755 /usr/local/bin/helm
+    wget -O /usr/local/bin/kubectl "${KUBE_URL}" && \
+    chmod 755 /usr/local/bin/helm && \
+    chmod 755 /usr/local/bin/kubectl 
 
 WORKDIR $HOME
 USER $USER

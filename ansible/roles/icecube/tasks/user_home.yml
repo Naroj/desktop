@@ -91,6 +91,14 @@
     src: "files/xfce4/terminalc"
     dest: "{{ home_dir }}/.config/xfce4/terminal/terminalrc"
     
+- name: XFCE4 Autostart
+  file:
+    src: "{{ item }}"
+    dest: "{{ home_dir }}/.config/autostart/{{ item | basename }}"
+    state: link
+  with_items:
+    - "/usr/share/applications/protonvpn.desktop"
+
 - name: Install Oh My ZSH
   shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
   args:
