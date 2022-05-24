@@ -1,0 +1,4 @@
+{% for rule in resolv_forwards %}
+{{ rule }}
+{% endfor %}
+
